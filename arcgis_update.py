@@ -15,7 +15,7 @@ with open(args.serviceDefinitionsJSON, 'r', encoding = 'utf-8') as f:
     tblDefs = list(map(lambda x: x.split('|'), serviceDefs['standaloneTableIDMap'].split(';')))
 
 # Objects that can let us control things in ArcGIS server:
-gis  = None
+gis   = None
 items = None
 
 # Login ArcGIS server:
@@ -42,7 +42,7 @@ def LoginArcGIS_Server():
             print('Retrying ...')
 
 
-# Get the item object that matchs the name:
+# Get the item (means FeatureLayer or Table object) that matchs the name:
 def GetItem(itemName):
     item = None
     for i, lyrDef in enumerate(lyrDefs):

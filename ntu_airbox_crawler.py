@@ -16,6 +16,8 @@ class NTU_AirboxCrawler(Crawler):
         self.insertBaseSQL = "insert into airbox(building_id, datetime, device_id, T, PM25, PM10, PM1, RH, C_PM25, C_Method, version) values{}"
         self.features = ['timestamp', 'device_id', 's_t0', 's_d0', 's_d1', 's_d2', 's_h0', 'c_d0', 'c_d0_method']
         self.lastVersion = None
+        self.uids = None
+        self.GetBuildingUIDs()
 
 
     def __call__(self):
@@ -42,6 +44,15 @@ class NTU_AirboxCrawler(Crawler):
         t = time.strftime(r'%d/%m/%Y %H:%M:%S', t)
 
         return t
+
+
+    def GetBuildingUIDs():
+        buildingUIDs = []
+        with open('The_Building_UID_In_NTU.txt', 'r') as f:
+            for line in f:
+                buildingUIDs.append(line.replace('\n', ''))
+
+        self.uids = buildingUIDs
 
 
     def GetAllPM25Data(self):
@@ -83,9 +94,8 @@ class NTU_AirboxCrawler(Crawler):
 
     def TidyData(self, content):
         datas = []
-        uids = args.buildingUIDs
         feeds = content['feeds']
-        for i, uid in enumerate(uids):
+        for i, uid in enumerate(self.uids):
             datas.append(self.GetOneAirboxData(uid, feeds[i]))
 
         return datas

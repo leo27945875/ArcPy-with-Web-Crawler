@@ -1,6 +1,5 @@
 import requests
 import time
-import args
 from bs4 import BeautifulSoup
 from datetime import datetime
 from crawler import Crawler
@@ -17,7 +16,8 @@ class NTU_ElecCrawler(Crawler):
                      'mn': '',
                      'ok': '%BDT%A9w'}
         self.insertBaseSQL = "insert into power_consumption(building_id, year, month, consumption) values{}"
-        self.uids = None
+        self.uids = None       # Means the uids that will be scraped from [self.url].
+        self.uidsToUse = None  # Means the uids in [The_Building_UID_In_NTU.txt].
         self.GetBuildingUIDsToUse()
 
 
@@ -37,7 +37,12 @@ class NTU_ElecCrawler(Crawler):
 
 
     def GetBuildingUIDsToUse(self):
-        self.uidsToUse = args.buildingUIDs
+        buildingUIDs = []
+        with open('The_Building_UID_In_NTU.txt', 'r') as f:
+            for line in f:
+                buildingUIDs.append(line.replace('\n', ''))
+
+        self.uidsToUse = buildingUIDs
 
 
     def SumEverydayElecValue(self, column):
@@ -55,10 +60,10 @@ class NTU_ElecCrawler(Crawler):
             mean = s/n
             s += mean*nNone
 
-        if s == 0.:
-            return None
-        else:
+        if s:
             return s
+        else:
+            return None
 
 
     def GetOneMonthElecData(self, year, month):
