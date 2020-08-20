@@ -13,7 +13,7 @@ class NTU_AirboxCrawler(Crawler):
         super().__init__(db, dbInfo, isToDatabase, isCommit)
         self.url = url
         self.header = header
-        self.insertBaseSQL = "insert into airbox(building_id, datetime, device_id, T, [PM2.5], PM10, PM1, RH, C_PM25, C_Method, version) values{}"
+        self.insertBaseSQL = "insert into airbox(building_id, datetime, device_id, T, PM25, PM10, PM1, RH, C_PM25, C_Method, version) values{}"
         self.features = ['timestamp', 'device_id', 's_t0', 's_d0', 's_d1', 's_d2', 's_h0', 'c_d0', 'c_d0_method']
         self.lastVersion = None
 

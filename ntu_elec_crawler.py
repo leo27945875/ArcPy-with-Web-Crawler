@@ -18,13 +18,12 @@ class NTU_ElecCrawler(Crawler):
                      'ok': '%BDT%A9w'}
         self.insertBaseSQL = "insert into power_consumption(building_id, year, month, consumption) values{}"
         self.uids = None
-        self.uidsToUse = None
+        self.GetBuildingUIDsToUse()
 
 
     def __call__(self, startYear = 100, endYear = None):
         try:
             self.ConnectDatabase()
-            self.GetBuildingUIDsToUse()
             self.GetAllElecData(startYear, endYear)
 
         except Exception as e:

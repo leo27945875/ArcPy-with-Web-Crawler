@@ -20,10 +20,11 @@ urlAirBox = 'https://pm25.lass-net.org/data/last-all-airbox.json.gz'
 
 
 # SQL Server settings:
-msSQL_Info = dict(driver = '{SQL Server}',
-                  server = 'MSI\MSSQL2019',
-                  database = 'NTU',
-                  trusted_connection = 'yes')
+databaseName = 'MSSQL'
+SQL_Info = dict(driver = '{SQL Server}',
+                server = 'MSI\MSSQL2019',
+                database = 'NTU',
+                trusted_connection = 'yes')
 
 
 # Crawler data settings:
@@ -41,6 +42,13 @@ buildingUIDs = []
 with open('The_Building_UID_In_NTU.txt', 'r') as f:
     for line in f:
         buildingUIDs.append(line.replace('\n', ''))
+
+
+# Crawler objects:
+crawlerT = None
+crawlerB = None
+crawlerE = None
+crawlerA = None
 
 
 # ArcGIS env settings:
@@ -68,12 +76,20 @@ elecTblName = 'NTU_Elec'
 
 buildingTblName = 'NTU_Building'
 buildingGeoLyrName = 'NTU_Building_3D_Template'
-buildingTemplateFields = [
-                          {'field_name': 'Data' , 'field_type': 'FLOAT'},
-                         ]
 building3D_LyrName = buildingTblName+'_3D_with_Data'
 
 airboxTblName = 'NTU_Airbox'
+
+
+# Field names: (Don't change !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!)
+treeFeatures = ['treeID', 'name', 'growthFrom', 'treeCrown', 'treeHeight', 'TCO2', 'response', 'z']
+
+buildingFeatures = ['uid', 'building_name', 'type', 'floor', 'basement', 'area', 'birth_year', 'height']
+buildingTemplateFields = [{'field_name': 'Data' , 'field_type': 'FLOAT'}]
+
+elecFeatures = ['uid', 'elec', 'year', 'month']
+
+airboxFeatures = ['uid', 'datetime', 'PM25', 'version']
 
 
 # Symbology settings:

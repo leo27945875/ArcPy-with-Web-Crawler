@@ -27,7 +27,7 @@ airboxNewestData = None
 
 # Tree data settings:
 treeLyrName = args.treeLyrName
-treeFeatures = ['treeID', 'name', 'growthFrom', 'treeCrown', 'treeHeight', 'TCO2', 'response', 'z'] # Don't change !
+treeFeatures = args.treeFeatures
 if not arcpy.Exists(treeLyrName):
     arcpy.management.CreateFeatureclass('', treeLyrName, 'Point', spatial_reference = twd97)
     arcpy.management.AddField(treeLyrName, treeFeatures[0], 'TEXT' , field_length = 20, field_is_nullable = "NULLABLE")
@@ -58,7 +58,7 @@ else:
 
 buildingTblName = args.buildingTblName
 building3D_LyrName = args.building3D_LyrName
-buildingFeatures = ['uid', 'building_name', 'type', 'floor', 'basement', 'area', 'birth_year', 'height'] # Don't change !
+buildingFeatures = args.buildingFeatures
 if not arcpy.Exists(buildingTblName):
     arcpy.management.CreateTable('', buildingTblName)
     arcpy.management.AddField(buildingTblName, buildingFeatures[0], 'TEXT' , field_length = 20, field_is_nullable = "NON_NULLABLE")
@@ -76,7 +76,7 @@ else:
 
 # Elec data settings:
 elecTblName = args.elecTblName
-elecFeatures = ['uid', 'elec', 'year', 'month'] # Don't change !
+elecFeatures = args.elecFeatures
 if not arcpy.Exists(elecTblName):
     arcpy.management.CreateTable('', elecTblName)
     arcpy.management.AddField(elecTblName, elecFeatures[0], 'TEXT', field_length = 20, field_is_nullable = "NON_NULLABLE")
@@ -90,7 +90,7 @@ else:
 
 # Airbox data setting:
 airboxTblName = args.airboxTblName
-airboxFeatures = ['uid', 'datetime', 'PM25', 'version'] # Don't change !
+airboxFeatures = args.airboxFeatures
 if not arcpy.Exists(airboxTblName):
     arcpy.management.CreateTable('', airboxTblName)
     arcpy.management.AddField(airboxTblName, airboxFeatures[0], 'TEXT' , field_length = 20, field_is_nullable = "NON_NULLABLE")
@@ -252,7 +252,7 @@ def InsertNewestAirbox_DataToBuildingLayer():
         for row in cursor:
             airboxToShow[row[0]] = (row[1] if row[1] != 'N\A' else None)
 
-    with arcpy.da.UpdateCursor(building3D_LyrName, ['UID', args.buildingTemplateFields[1]['field_name']]) as cursor:
+    with arcpy.da.UpdateCursor(building3D_LyrName, ['UID', args.buildingTemplateFields[0]['field_name']]) as cursor:
         for row in cursor:
             try:
                 newData = [row[0], airboxToShow[row[0]]]

@@ -17,34 +17,35 @@ from arcgis_events import (GetOneTreeDataEvent,
 
 
 def Main(isGetTreeData, isGetBuildingData, isGetElecData, isGetAirboxData, isToDatabase, isCommit, isToArcGIS, isUploadArcGIS):
-    header = args.header
-    msSQL_Info = args.msSQL_Info
-
     # Crawler objects:
     crawlerT = NTU_TreeCrawler(args.urlAll, args.urlTree, args.urlGet,
-                               header = header,
-                               db = 'MSSQL',
-                               dbInfo = msSQL_Info,
+                               header = args.header,
+                               db = args.databaseName,
+                               dbInfo = args.SQL_Info,
                                isToDatabase = isToDatabase,
                                isCommit = isCommit)
     crawlerE = NTU_ElecCrawler(url = args.urlElec,
-                               header = header,
-                               db = 'MSSQL',
-                               dbInfo = msSQL_Info,
+                               header = args.header,
+                               db = args.databaseName,
+                               dbInfo = args.SQL_Info,
                                isToDatabase = isToDatabase,
                                isCommit = isCommit)
     crawlerB = NTU_BuildingCrawler(url = args.urlBuilding,
-                                   header = header,
-                                   db = 'MSSQL',
-                                   dbInfo = msSQL_Info,
+                                   header = args.header,
+                                   db = args.databaseName,
+                                   dbInfo = args.SQL_Info,
                                    isToDatabase = isToDatabase,
                                    isCommit = isCommit)
     crawlerA = NTU_AirboxCrawler(url = args.urlAirBox,
                                  header = header,
-                                 db = 'MSSQL',
-                                 dbInfo = msSQL_Info,
+                                 db = args.databaseName,
+                                 dbInfo = args.SQL_Info,
                                  isToDatabase = isToDatabase,
                                  isCommit = isCommit)
+    args.crawlerT = crawlerT
+    args.crawlerB = crawlerB
+    args.crawlerE = crawlerE
+    args.crawlerA = crawlerA
 
     # Set data-getting events:
     if isToArcGIS:
@@ -85,8 +86,9 @@ def Main(isGetTreeData, isGetBuildingData, isGetElecData, isGetAirboxData, isToD
             if isUploadArcGIS:
                 UploadGIS_Service()
 
+
     except Exception as e:
-        print(f'-------\nError:\n  {e}\n-------\n')
+        print(f'-------\nError in Main:\n  {e}\n-------\n')
 
     finally:
         if isGetTreeData and not crawlerT.isDatabaseClose:
@@ -101,11 +103,9 @@ def Main(isGetTreeData, isGetBuildingData, isGetElecData, isGetAirboxData, isToD
         print('='*50)
         print('Done!!\n\n')
 
-    return crawlerT, crawlerE, crawlerB
-
 
 if __name__ == "__main__":
-    crawlerT, crawlerE, crawlerB = Main(**args.mainControl)
+    Main(**args.mainControl)
 
 
 
